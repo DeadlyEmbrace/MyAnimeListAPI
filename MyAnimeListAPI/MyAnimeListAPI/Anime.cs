@@ -17,7 +17,7 @@ namespace MyAnimeListAPI
                 return string.Empty;
 
             string result = null;
-            
+
             var request = (HttpWebRequest)WebRequest.Create(AnimeUrl + "animelist/" + userName);
 
             request.Method = "GET";
@@ -48,9 +48,28 @@ namespace MyAnimeListAPI
         /// </summary>
         public static async Task<string> GetAnimeDetailAsync(int animeId)
         {
-            var client = new WebClient();
+            string result = null;
 
-            var result = await client.DownloadStringTaskAsync(AnimeUrl + "anime/" + animeId).ConfigureAwait(false);
+            var request = (HttpWebRequest)WebRequest.Create(AnimeUrl + "anime/" + animeId);
+
+            request.Method = "GET";
+
+            var response = await request.GetResponseAsync().ConfigureAwait(false);
+
+            if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+            {
+                using (var stream = response.GetResponseStream())
+                {
+                    if (stream != null)
+                    {
+                        var buffer = new byte[4096];
+
+                        await stream.ReadAsync(buffer, 0, 4096).ConfigureAwait(false);
+
+                        result = System.Text.Encoding.UTF8.GetString(buffer);
+                    }
+                }
+            }
 
             return result;
         }
@@ -61,18 +80,58 @@ namespace MyAnimeListAPI
         /// </summary>
         public static async Task<string> GetAnimeDetailAsync(int animeId, string login, string password)
         {
-            var client = new WebClient { Credentials = new NetworkCredential(login, password) };
+            string result = null;
 
-            var result = await client.DownloadStringTaskAsync(AnimeUrl + "anime/" + animeId + "?mine=1").ConfigureAwait(false);
+            var request = (HttpWebRequest)WebRequest.Create(AnimeUrl + "anime/" + animeId + "?mine=1");
+
+            request.Method = "GET";
+
+            request.Credentials = new NetworkCredential(login, password);
+
+            var response = await request.GetResponseAsync().ConfigureAwait(false);
+
+            if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+            {
+                using (var stream = response.GetResponseStream())
+                {
+                    if (stream != null)
+                    {
+                        var buffer = new byte[4096];
+
+                        await stream.ReadAsync(buffer, 0, 4096).ConfigureAwait(false);
+
+                        result = System.Text.Encoding.UTF8.GetString(buffer);
+                    }
+                }
+            }
 
             return result;
         }
 
         public static async Task<string> SearchAnimeAsync(string query)
         {
-            var client = new WebClient();
+            string result = null;
 
-            var result = await client.DownloadStringTaskAsync(AnimeUrl + "anime/search?q=" + HttpUtility.UrlEncode(query)).ConfigureAwait(false);
+            var request = (HttpWebRequest)WebRequest.Create(AnimeUrl + "anime/search?q=" + HttpUtility.UrlEncode(query));
+
+            request.Method = "GET";
+
+            var response = await request.GetResponseAsync().ConfigureAwait(false);
+
+            if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+            {
+                using (var stream = response.GetResponseStream())
+                {
+                    if (stream != null)
+                    {
+                        var buffer = new byte[4096];
+
+                        await stream.ReadAsync(buffer, 0, 4096).ConfigureAwait(false);
+
+                        result = System.Text.Encoding.UTF8.GetString(buffer);
+                    }
+                }
+            }
 
             return result;
         }
