@@ -16,10 +16,28 @@ namespace MyAnimeListAPI
             if (string.IsNullOrEmpty(userName))
                 return string.Empty;
 
-            var client = new WebClient();
+            string result = null;
+            
+            var request = (HttpWebRequest)WebRequest.Create(AnimeUrl + "animelist/" + userName);
 
-            //The MAL-API will cause a System.Net.WebException if the login is not found
-            var result = await client.DownloadStringTaskAsync(AnimeUrl + "animelist/" + userName).ConfigureAwait(false);
+            request.Method = "GET";
+
+            var response = await request.GetResponseAsync().ConfigureAwait(false);
+
+            if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+            {
+                using (var stream = response.GetResponseStream())
+                {
+                    if (stream != null)
+                    {
+                        var buffer = new byte[4096];
+
+                        await stream.ReadAsync(buffer, 0, 4096).ConfigureAwait(false);
+
+                        result = System.Text.Encoding.UTF8.GetString(buffer);
+                    }
+                }
+            }
 
             return result;
         }
