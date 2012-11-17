@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System;
+using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -30,11 +32,22 @@ namespace MyAnimeListAPI
                 {
                     if (stream != null)
                     {
-                        var buffer = new byte[4096];
+                        var buffer = new byte[2048];
 
-                        await stream.ReadAsync(buffer, 0, 4096).ConfigureAwait(false);
+                        using (var destinationStream = new MemoryStream())
+                        {
+                            int bytesRead;
 
-                        result = System.Text.Encoding.UTF8.GetString(buffer);
+                            do
+                            {
+                                bytesRead = await stream.ReadAsync(buffer, 0, 2048).ConfigureAwait(false);
+
+                                destinationStream.Write(buffer, 0, bytesRead);
+                            }
+                            while (bytesRead != 0);
+
+                            result = System.Text.Encoding.UTF8.GetString(destinationStream.ToArray());
+                        }
                     }
                 }
             }
@@ -50,28 +63,51 @@ namespace MyAnimeListAPI
         {
             string result = null;
 
-            var request = (HttpWebRequest)WebRequest.Create(AnimeUrl + "anime/" + animeId);
-
-            request.Method = "GET";
-
-            var response = await request.GetResponseAsync().ConfigureAwait(false);
-
-            if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+            try
             {
-                using (var stream = response.GetResponseStream())
+                var request = (HttpWebRequest)WebRequest.Create(AnimeUrl + "anime/" + animeId);
+
+                request.Method = "GET";
+
+                var response = await request.GetResponseAsync().ConfigureAwait(false);
+
+                if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
                 {
-                    if (stream != null)
+                    using (var stream = response.GetResponseStream())
                     {
-                        var buffer = new byte[4096];
+                        if (stream != null)
+                        {
+                            var buffer = new byte[2048];
 
-                        await stream.ReadAsync(buffer, 0, 4096).ConfigureAwait(false);
+                            using (var destinationStream = new MemoryStream())
+                            {
+                                int bytesRead;
 
-                        result = System.Text.Encoding.UTF8.GetString(buffer);
+                                do
+                                {
+                                    bytesRead = await stream.ReadAsync(buffer, 0, 2048).ConfigureAwait(false);
+
+                                    destinationStream.Write(buffer, 0, bytesRead);
+                                }
+                                while (bytesRead != 0);
+
+                                result = System.Text.Encoding.UTF8.GetString(destinationStream.ToArray());
+                            }
+                        }
                     }
                 }
-            }
 
-            return result;
+                return result;
+            }
+            catch (WebException ex)
+            {
+                var response = (HttpWebResponse)ex.Response;
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    return result;
+
+                throw;
+            }
         }
 
         /// <summary>
@@ -82,30 +118,55 @@ namespace MyAnimeListAPI
         {
             string result = null;
 
-            var request = (HttpWebRequest)WebRequest.Create(AnimeUrl + "anime/" + animeId + "?mine=1");
-
-            request.Method = "GET";
-
-            request.Credentials = new NetworkCredential(login, password);
-
-            var response = await request.GetResponseAsync().ConfigureAwait(false);
-
-            if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+            try
             {
-                using (var stream = response.GetResponseStream())
+                var request = (HttpWebRequest)WebRequest.Create(AnimeUrl + "anime/" + animeId + "?mine=1");
+
+                request.Method = "GET";
+
+                request.UseDefaultCredentials = false;
+
+                request.Credentials = new NetworkCredential(login, password);
+
+                var response = await request.GetResponseAsync().ConfigureAwait(false);
+
+                if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
                 {
-                    if (stream != null)
+                    using (var stream = response.GetResponseStream())
                     {
-                        var buffer = new byte[4096];
+                        if (stream != null)
+                        {
+                            var buffer = new byte[2048];
 
-                        await stream.ReadAsync(buffer, 0, 4096).ConfigureAwait(false);
+                            using (var destinationStream = new MemoryStream())
+                            {
+                                int bytesRead;
 
-                        result = System.Text.Encoding.UTF8.GetString(buffer);
+                                do
+                                {
+                                    bytesRead = await stream.ReadAsync(buffer, 0, 2048).ConfigureAwait(false);
+
+                                    destinationStream.Write(buffer, 0, bytesRead);
+                                }
+                                while (bytesRead != 0);
+
+                                result = System.Text.Encoding.UTF8.GetString(destinationStream.ToArray());
+                            }
+                        }
                     }
                 }
-            }
 
-            return result;
+                return result;
+            }
+            catch (WebException ex)
+            {
+                var response = (HttpWebResponse)ex.Response;
+
+                if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.NotFound)
+                    return result;
+
+                throw;
+            }
         }
 
         public static async Task<string> SearchAnimeAsync(string query)
@@ -124,11 +185,22 @@ namespace MyAnimeListAPI
                 {
                     if (stream != null)
                     {
-                        var buffer = new byte[4096];
+                        var buffer = new byte[2048];
 
-                        await stream.ReadAsync(buffer, 0, 4096).ConfigureAwait(false);
+                        using (var destinationStream = new MemoryStream())
+                        {
+                            int bytesRead;
 
-                        result = System.Text.Encoding.UTF8.GetString(buffer);
+                            do
+                            {
+                                bytesRead = await stream.ReadAsync(buffer, 0, 2048).ConfigureAwait(false);
+
+                                destinationStream.Write(buffer, 0, bytesRead);
+                            }
+                            while (bytesRead != 0);
+
+                            result = System.Text.Encoding.UTF8.GetString(destinationStream.ToArray());
+                        }
                     }
                 }
             }
