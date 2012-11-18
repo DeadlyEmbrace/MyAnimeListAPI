@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -26,7 +25,7 @@ namespace MyAnimeListAPI
             if (string.IsNullOrEmpty(userName))
                 return string.Empty;
 
-            var result = await WebRequest.Create(AnimeUrl + "animelist/" + userName);
+            var result = await WebRequest.Create(AnimeUrl + "animelist/" + userName, "GET");
 
             return result;
         }
@@ -41,7 +40,7 @@ namespace MyAnimeListAPI
 
             try
             {
-                result = await WebRequest.Create(AnimeUrl + "anime/" + animeId);
+                result = await WebRequest.Create(AnimeUrl + "anime/" + animeId, "GET");
 
                 return result;
             }
@@ -66,7 +65,7 @@ namespace MyAnimeListAPI
 
             try
             {
-                result = await WebRequest.Create(AnimeUrl + "anime/" + animeId + "?mine=1", login, password);
+                result = await WebRequest.Create(AnimeUrl + "anime/" + animeId + "?mine=1", login, password, "GET");
 
                 return result;
             }
@@ -83,7 +82,7 @@ namespace MyAnimeListAPI
 
         public static async Task<string> SearchAnimeAsync(string query)
         {
-            var result = await WebRequest.Create(AnimeUrl + "anime/search?q=" + HttpUtility.UrlEncode(query));
+            var result = await WebRequest.Create(AnimeUrl + "anime/search?q=" + HttpUtility.UrlEncode(query), "GET");
 
             return result;
         }
@@ -95,14 +94,57 @@ namespace MyAnimeListAPI
         public static async Task<bool> AddAnimeAsync(int animeId, AnimeStatus animeStatus, int episodeWatched, int score,
                                                 string login, string password)
         {
-            var result = false;
-
             var parameters = string.Format("anime_id={0}&status={1}&episodes={2}&score={3}", animeId, GetAnimeStatusName(animeStatus),
                                            episodeWatched, score);
 
             try
             {
-                result = await WebRequest.Create(AnimeUrl + "animelist/anime", parameters, login, password, "POST");
+                return await WebRequest.Create(AnimeUrl + "animelist/anime", parameters, login, password, "POST") == string.Empty;
+            }
+            catch (WebException ex)
+            {
+                var response = (HttpWebResponse)ex.Response;
+
+                if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.BadRequest)
+                    return false;
+
+                throw;
+            }
+        }
+
+
+        public static async Task<bool> UpdateAnimeAsync(int animeId, AnimeStatus animeStatus, int episodeWatched, int score,
+                                               string login, string password)
+        {
+            var parameters = string.Format("&status={0}&episodes={1}&score={2}", GetAnimeStatusName(animeStatus),
+                                           episodeWatched, score);
+
+            try
+            {
+                return await WebRequest.Create(AnimeUrl + "animelist/anime/" + animeId, parameters, login, password, "PUT") == string.Empty;
+            }
+            catch (WebException ex)
+            {
+                var response = (HttpWebResponse)ex.Response;
+
+                if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.BadRequest)
+                    return false;
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Delete an anime from a user's anime list.
+        /// Return the original anime if the anime was successfully deleted from animelist.
+        /// </summary>
+        public static async Task<string> DeleteAnimeAsync(int animeId, string login, string password)
+        {
+            string result = null;
+
+            try
+            {
+                result = await WebRequest.Create(AnimeUrl + "animelist/anime/" + animeId, login, password, "DELETE");
 
                 return result;
             }
@@ -110,12 +152,13 @@ namespace MyAnimeListAPI
             {
                 var response = (HttpWebResponse)ex.Response;
 
-                if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.BadRequest)
+                if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.NotFound || response.StatusCode == HttpStatusCode.InternalServerError)
                     return result;
 
                 throw;
             }
         }
+
 
         private static string GetAnimeStatusName(AnimeStatus animeStatus)
         {

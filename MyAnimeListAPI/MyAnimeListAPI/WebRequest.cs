@@ -6,16 +6,16 @@ namespace MyAnimeListAPI
 {
     public static class WebRequest
     {
-        public static async Task<string> Create(string url)
+        public static async Task<string> Create(string url, string method)
         {
             var request = (HttpWebRequest)System.Net.WebRequest.Create(url);
 
-            request.Method = "GET";
+            request.Method = method;
 
             return await GetResponse(request);
         }
 
-        public static async Task<string> Create(string url, string login, string password)
+        public static async Task<string> Create(string url, string login, string password, string method)
         {
             var request = (HttpWebRequest)System.Net.WebRequest.Create(url);
 
@@ -23,12 +23,12 @@ namespace MyAnimeListAPI
 
             request.Credentials = new NetworkCredential(login, password);
 
-            request.Method = "GET";
+            request.Method = method;
 
             return await GetResponse(request);
         }
 
-        public static async Task<bool> Create(string url, string parameters, string login, string password, string method)
+        public static async Task<string> Create(string url, string parameters, string login, string password, string method)
         {
             var request = (HttpWebRequest)System.Net.WebRequest.Create(url);
 
@@ -49,9 +49,7 @@ namespace MyAnimeListAPI
                 stream.Write(parametersArray, 0, parametersArray.Length);
             }
 
-            var response = await GetResponse(request);
-
-            return response == string.Empty;
+            return await GetResponse(request);
         }
         
         private static async Task<string> GetResponse(HttpWebRequest request)
