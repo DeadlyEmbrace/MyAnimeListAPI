@@ -1,10 +1,9 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 
 namespace MyAnimeListAPI
 {
-    public static class Helper
+    public static class Credentials
     {
         private const string CredentialsUrl = "http://myanimelist.net/api/account/verify_credentials.xml";
 
@@ -14,7 +13,7 @@ namespace MyAnimeListAPI
 
             try
             {
-                var request = (HttpWebRequest)WebRequest.Create(CredentialsUrl);
+                var request = (HttpWebRequest)System.Net.WebRequest.Create(CredentialsUrl);
 
                 request.Method = "GET";
 
