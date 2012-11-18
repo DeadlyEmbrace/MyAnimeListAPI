@@ -31,7 +31,7 @@ namespace MyAnimeListAPI
         }
 
         /// <summary>
-        /// The method will return the anime's detail without user's detail
+        /// The method will return the anime's detail without user's detail.
         /// Without: user's score, watched status, watched episodes
         /// </summary>
         public static async Task<string> GetAnimeDetailAsync(int animeId)
@@ -56,7 +56,7 @@ namespace MyAnimeListAPI
         }
 
         /// <summary>
-        /// The method will return the anime's detail with user's detail
+        /// The method will return the anime's detail with user's detail.
         /// With: user's score, watched status, watched episodes
         /// </summary>
         public static async Task<string> GetAnimeDetailAsync(int animeId, string login, string password)
@@ -88,8 +88,7 @@ namespace MyAnimeListAPI
         }
 
         /// <summary>
-        /// The method will add an anime in the user's list
-        /// If you add an existing animeId, the request will throw a BadRequest exception
+        /// The method will add an anime in the user's list.
         /// </summary>
         public static async Task<bool> AddAnimeAsync(int animeId, AnimeStatus animeStatus, int episodeWatched, int score,
                                                 string login, string password)
