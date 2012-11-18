@@ -8,6 +8,15 @@ namespace MyAnimeListAPI
     {
         private const string AnimeUrl = "http://mal-api.com/";
 
+        public enum AnimeStatus
+        {
+            Watching = 1,
+            Completed,
+            OnHold,
+            Dropped,
+            PlanToWatch
+        }
+
         /// <summary> 
         /// Get the user's animelist
         /// </summary>
@@ -76,6 +85,35 @@ namespace MyAnimeListAPI
             var result = await WebRequest.Create(AnimeUrl + "anime/search?q=" + HttpUtility.UrlEncode(query));
 
             return result;
+        }
+
+        /// <summary>
+        /// The method will add an anime in the user's list
+        /// If you add an existing animeId, the request will throw a BadRequest exception
+        /// </summary>
+        public static async Task<bool> AddAnimeAsync(int animeId, AnimeStatus animeStatus, int episodeWatched, int score,
+                                                string login, string password)
+        {
+            var result = false;
+
+            var parameters = string.Format("anime_id={0}&status={1}&episodes={2}&score={3}", animeId, (int)animeStatus,
+                                           episodeWatched, score);
+
+            try
+            {
+                result = await WebRequest.Create(AnimeUrl + "animelist/anime", parameters, login, password, "POST");
+
+                return result;
+            }
+            catch (WebException ex)
+            {
+                var response = (HttpWebResponse)ex.Response;
+
+                if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.BadRequest)
+                    return result;
+
+                throw;
+            }
         }
     }
 }
