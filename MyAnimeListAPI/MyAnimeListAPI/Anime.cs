@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -11,10 +12,10 @@ namespace MyAnimeListAPI
         public enum AnimeStatus
         {
             Watching = 1,
-            Completed,
-            OnHold,
-            Dropped,
-            PlanToWatch
+            Completed = 2,
+            OnHold = 3,
+            Dropped = 4,
+            PlanToWatch = 6
         }
 
         /// <summary> 
@@ -96,7 +97,7 @@ namespace MyAnimeListAPI
         {
             var result = false;
 
-            var parameters = string.Format("anime_id={0}&status={1}&episodes={2}&score={3}", animeId, (int)animeStatus,
+            var parameters = string.Format("anime_id={0}&status={1}&episodes={2}&score={3}", animeId, GetAnimeStatusName(animeStatus),
                                            episodeWatched, score);
 
             try
@@ -114,6 +115,36 @@ namespace MyAnimeListAPI
 
                 throw;
             }
+        }
+
+        private static string GetAnimeStatusName(AnimeStatus animeStatus)
+        {
+            var status = string.Empty;
+
+            switch (animeStatus)
+            {
+                case AnimeStatus.Watching:
+                    status = "watching";
+                    break;
+
+                case AnimeStatus.Completed:
+                    status = "completed";
+                    break;
+
+                case AnimeStatus.Dropped:
+                    status = "dropped";
+                    break;
+
+                case AnimeStatus.OnHold:
+                    status = "on-hold";
+                    break;
+
+                case AnimeStatus.PlanToWatch:
+                    status = "plan to watch";
+                    break;
+            }
+
+            return status;
         }
     }
 }
