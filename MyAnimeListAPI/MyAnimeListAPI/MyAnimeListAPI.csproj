@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Anime.cs" />
     <Compile Include="Credentials.cs" />
+    <Compile Include="Manga.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebRequest.cs" />
   </ItemGroup>
