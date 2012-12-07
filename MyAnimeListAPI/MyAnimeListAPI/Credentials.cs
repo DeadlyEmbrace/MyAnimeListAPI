@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace MyAnimeListAPI
@@ -13,7 +14,14 @@ namespace MyAnimeListAPI
 
             try
             {
-                var request = (HttpWebRequest)System.Net.WebRequest.Create(CredentialsUrl);
+                var guid = Guid.NewGuid();
+
+                //Force the URL to use new Credentials.
+                //If the request is done with a valid Credentials then the next request (with an invalid Credentials) will be accepted... 
+                //This queryParameter is a workaround to use the new Credentials
+                var queryParameter = "?queryParam=" + guid;
+
+                var request = (HttpWebRequest)System.Net.WebRequest.Create(CredentialsUrl + queryParameter);
 
                 request.Method = "GET";
 
