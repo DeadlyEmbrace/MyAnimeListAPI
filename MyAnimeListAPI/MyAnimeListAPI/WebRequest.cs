@@ -58,7 +58,7 @@ namespace MyAnimeListAPI
 
             var response = await request.GetResponseAsync().ConfigureAwait(false);
 
-            if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+            if (((HttpWebResponse)response).StatusCode == System.Net.HttpStatusCode.OK)
             {
                 using (var stream = response.GetResponseStream())
                 {

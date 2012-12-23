@@ -19,7 +19,7 @@ namespace MyAnimeListAPI
                 //Force the URL to use new Credentials.
                 //If the request is done with a valid Credentials then the next request (with an invalid Credentials) will be accepted... 
                 //This queryParameter is a workaround to use the new Credentials
-                var queryParameter = "?queryParam=" + guid;
+                var queryParameter = "?token=" + guid;
 
                 var request = (HttpWebRequest)System.Net.WebRequest.Create(CredentialsUrl + queryParameter);
 
@@ -31,7 +31,7 @@ namespace MyAnimeListAPI
 
                 var response = await request.GetResponseAsync().ConfigureAwait(false);
 
-                if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+                if (((HttpWebResponse)response).StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     result = true;
                 }
@@ -42,7 +42,7 @@ namespace MyAnimeListAPI
             {
                 var response = (HttpWebResponse)ex.Response;
 
-                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     return false;
 
                 throw;

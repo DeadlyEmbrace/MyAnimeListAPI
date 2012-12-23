@@ -48,7 +48,7 @@ namespace MyAnimeListAPI
             {
                 var response = (HttpWebResponse)ex.Response;
 
-                if (response.StatusCode == HttpStatusCode.NotFound)
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                     return result;
 
                 throw;
@@ -73,7 +73,7 @@ namespace MyAnimeListAPI
             {
                 var response = (HttpWebResponse)ex.Response;
 
-                if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.NotFound)
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.NotFound)
                     return result;
 
                 throw;
@@ -104,7 +104,7 @@ namespace MyAnimeListAPI
             {
                 var response = (HttpWebResponse)ex.Response;
 
-                if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.BadRequest)
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                     return false;
 
                 throw;
@@ -126,7 +126,7 @@ namespace MyAnimeListAPI
             {
                 var response = (HttpWebResponse)ex.Response;
 
-                if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.BadRequest)
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                     return false;
 
                 throw;
@@ -151,7 +151,7 @@ namespace MyAnimeListAPI
             {
                 var response = (HttpWebResponse)ex.Response;
 
-                if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.NotFound || response.StatusCode == HttpStatusCode.InternalServerError)
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.NotFound || response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
                     return result;
 
                 throw;
