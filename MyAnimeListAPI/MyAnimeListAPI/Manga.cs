@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -25,7 +26,12 @@ namespace MyAnimeListAPI
             if (string.IsNullOrEmpty(userName))
                 return string.Empty;
 
-            var result = await WebRequest.Create(MangaUrl + "mangalist/" + userName, "GET");
+            //Workaround: Need to add arbitrary token to get a fresh list and not a cached list
+            var guid = Guid.NewGuid();
+
+            var queryParameter = "?token=" + guid;
+
+            var result = await WebRequest.Create(string.Format(MangaUrl + "{0}{1}{2}", "mangalist/", userName, queryParameter), "GET");
 
             return result;
         }
