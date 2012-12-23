@@ -93,7 +93,7 @@ namespace MyAnimeListAPI
         public static async Task<bool> AddMangaAsync(int mangaId, MangaStatus mangaStatus, int episodeWatched, int score,
                                                 string login, string password)
         {
-            var parameters = string.Format("manga_id={0}&status={1}&episodes={2}&score={3}", mangaId, GetMangaStatusName(mangaStatus),
+            var parameters = string.Format("manga_id={0}&status={1}&chapters={2}&score={3}", mangaId, GetMangaStatusName(mangaStatus),
                                            episodeWatched, score);
 
             try
@@ -115,7 +115,7 @@ namespace MyAnimeListAPI
         public static async Task<bool> UpdateMangaAsync(int mangaId, MangaStatus mangaStatus, int episodeWatched, int score,
                                                string login, string password)
         {
-            var parameters = string.Format("&status={0}&episodes={1}&score={2}", GetMangaStatusName(mangaStatus),
+            var parameters = string.Format("&status={0}&chapters={1}&score={2}", GetMangaStatusName(mangaStatus),
                                            episodeWatched, score);
 
             try
