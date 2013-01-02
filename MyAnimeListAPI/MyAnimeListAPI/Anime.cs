@@ -121,7 +121,7 @@ namespace MyAnimeListAPI
         public static async Task<bool> UpdateAnimeAsync(int animeId, AnimeStatus animeStatus, int episodeWatched, int score,
                                                string login, string password)
         {
-            var parameters = string.Format("&status={0}&episodes={1}&score={2}", GetAnimeStatusName(animeStatus),
+            var parameters = string.Format("status={0}&episodes={1}&score={2}", GetAnimeStatusName(animeStatus),
                                            episodeWatched, score);
 
             try

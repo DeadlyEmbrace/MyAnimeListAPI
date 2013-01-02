@@ -121,7 +121,7 @@ namespace MyAnimeListAPI
         public static async Task<bool> UpdateMangaAsync(int mangaId, MangaStatus mangaStatus, int episodeWatched, int volumes, int score,
                                                string login, string password)
         {
-            var parameters = string.Format("&status={0}&chapters={1}&volumes={2}&score={3}", GetMangaStatusName(mangaStatus),
+            var parameters = string.Format("status={0}&chapters={1}&volumes={2}&score={3}", GetMangaStatusName(mangaStatus),
                                            episodeWatched, volumes, score);
 
             try
