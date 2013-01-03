@@ -38,7 +38,7 @@ namespace MyAnimeListAPI
 
         /// <summary>
         /// The method will return the manga's detail without user's detail.
-        /// Without: user's score, watched status, watched episodes
+        /// Without: user's score, read status, chapters read, volumes read
         /// </summary>
         public static async Task<string> GetMangaDetailAsync(int mangaId)
         {
@@ -63,7 +63,7 @@ namespace MyAnimeListAPI
 
         /// <summary>
         /// The method will return the manga's detail with user's detail.
-        /// With: user's score, watched status, watched episodes
+        /// With: user's score, read status, chapters read, volumes read
         /// </summary>
         public static async Task<string> GetMangaDetailAsync(int mangaId, string login, string password)
         {
@@ -118,11 +118,11 @@ namespace MyAnimeListAPI
         }
 
 
-        public static async Task<bool> UpdateMangaAsync(int mangaId, MangaStatus mangaStatus, int episodeWatched, int volumes, int score,
+        public static async Task<bool> UpdateMangaAsync(int mangaId, MangaStatus mangaStatus, int chapterRead, int volumes, int score,
                                                string login, string password)
         {
             var parameters = string.Format("status={0}&chapters={1}&volumes={2}&score={3}", GetMangaStatusName(mangaStatus),
-                                           episodeWatched, volumes, score);
+                                           chapterRead, volumes, score);
 
             try
             {
