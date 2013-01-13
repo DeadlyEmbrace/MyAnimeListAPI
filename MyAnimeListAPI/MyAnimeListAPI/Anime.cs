@@ -46,7 +46,12 @@ namespace MyAnimeListAPI
 
             try
             {
-                result = await WebRequest.Create(AnimeUrl + "anime/" + animeId, "GET");
+                //Workaround: Need to add arbitrary token to get a fresh list and not a cached list
+                var guid = Guid.NewGuid();
+
+                var queryParameter = "?token=" + guid;
+
+                result = await WebRequest.Create(string.Format(AnimeUrl + "{0}{1}{2}", "anime/", animeId, queryParameter), "GET");
 
                 return result;
             }
@@ -71,7 +76,12 @@ namespace MyAnimeListAPI
 
             try
             {
-                result = await WebRequest.Create(AnimeUrl + "anime/" + animeId + "?mine=1", login, password, "GET");
+                //Workaround: Need to add arbitrary token to get a fresh list and not a cached list
+                var guid = Guid.NewGuid();
+
+                var queryParameter = "?token=" + guid;
+
+                result = await WebRequest.Create(string.Format(AnimeUrl + "{0}{1}{2}{3}", "anime/", animeId, "?mine=1", queryParameter), login, password, "GET");
 
                 return result;
             }
